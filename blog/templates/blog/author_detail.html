@@ -1,0 +1,37 @@
+```django
+{% extends "blog/base.html" %}
+
+{% block content %}
+<section class="author-profile">
+    <header class="author-header">
+        <p class="eyebrow">AUTHOR</p>
+
+        <h1>
+            {% if author.get_full_name %}
+                {{ author.get_full_name }}
+            {% else %}
+                {{ author.username }}
+            {% endif %}
+        </h1>
+
+        <p class="author-username">@{{ author.username }}</p>
+
+        {% if author_profile and author_profile.bio %}
+            <p class="author-bio">{{ author_profile.bio }}</p>
+        {% else %}
+            <p class="author-bio">This author hasn't added a bio yet.</p>
+        {% endif %}
+    </header>
+
+    <section class="author-posts">
+        <h2>Published posts</h2>
+
+        {% for post in posts %}
+            {% include "blog/includes/post_card.html" with post=post %}
+        {% empty %}
+            <p>This author hasn't published any posts yet.</p>
+        {% endfor %}
+    </section>
+</section>
+{% endblock %}
+```

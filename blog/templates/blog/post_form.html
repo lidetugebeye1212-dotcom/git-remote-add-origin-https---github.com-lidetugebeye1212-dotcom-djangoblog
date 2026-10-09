@@ -1,0 +1,19 @@
+{% extends "blog/base.html" %}
+
+{% block title %}{{ title }} | My Blog{% endblock %}
+
+{% block content %}
+    <h1>{{ title }}</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit">Save Post</button>
+    </form>
+
+    <p>
+        <a href="{% url 'blog:post_list' %}">Cancel</a>
+    </p>
+{% endblock %}
+

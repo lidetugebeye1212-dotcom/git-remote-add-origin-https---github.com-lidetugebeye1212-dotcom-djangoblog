@@ -1,0 +1,75 @@
+
+{% extends "blog/base.html" %}
+
+{% block title %}Home | DjangoBlog{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h1>Welcome to DjangoBlog</h1>
+    <p>Share your thoughts, learn something new, and connect with readers.</p>
+</section>
+
+<form method="get" action="{% url 'blog:post_list' %}" class="search-form">
+    <div  class="search-field">
+        <label for="search-query">Search posts</label>
+        <input
+            type="search"
+            id="search-query"
+            name="q"
+            placeholder="Search by title or content..."
+            value="{{ query }}"
+        >
+    </div>
+
+    <div class="search-field">
+        <label for="category-filter">Category</label>
+        <select id="category-filter" name="category">
+            <option value="">All categories</option>
+
+            {% for category in categories %}
+                <option
+                    value="{{ category.id }}"
+                    {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}
+                >
+                    {{ category.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <button type="submit" class="button button-primary">
+        Search
+    </button>
+
+    <a href="{% url 'blog:post_list' %}" class="button button-secondary">
+        Clear
+    </a>
+</form>
+
+<h2>Latest Posts</h2>
+
+<div class="post-grid">
+    {% for post in page_obj %}
+        {% include "blog/includes/post_card.html" with post=post %}
+    {% empty %}
+        <div class="content-card">
+            <h3>No published posts yet</h3>
+            <p>Be the first to share something with the community.</p>
+        </div>
+    {% endfor %}
+</div>
+
+{% if page_obj.has_other_pages %}
+<nav class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}">← Previous</a>
+    {% endif %}
+
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Next →</a>
+    {% endif %}
+</nav>
+{% endif %}
+{% endblock %}

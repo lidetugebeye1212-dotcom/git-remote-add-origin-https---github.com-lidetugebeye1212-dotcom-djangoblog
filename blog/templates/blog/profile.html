@@ -1,0 +1,46 @@
+
+{% extends "blog/base.html" %}
+{% load static %}
+
+{% block content %}
+  <h1>My Profile</h1>
+
+  {% if messages %}
+    {% for message in messages %}
+      <p>{{ message }}</p>
+    {% endfor %}
+  {% endif %}
+
+  <p>Username: {{ profile_user.username }}</p>
+  <p>First name: {{ profile_user.first_name|default:"Not provided" }}</p>
+  <p>Last name: {{ profile_user.last_name|default:"Not provided" }}</p>
+  <p>Email: {{ profile_user.email|default:"Not provided" }}</p>
+
+  <a href="{% url 'profile_edit' %}">Edit profile</a>
+
+  <hr>
+
+  <h2>My Posts</h2>
+
+  {% for post in posts %}
+    <article>
+      <h3>{{ post.title }}</h3>
+      <p>Status: {{ post.get_status_display }}</p>
+
+      {% if post.status == "published" %}
+        <a href="{{ post.get_absolute_url }}">View post</a>
+      {% else %}
+        <a href="{% url 'blog:post_preview' post.slug %}">
+    Preview draft
+</a>
+      {% endif %}
+      <a href="{% url 'blog:author_detail' user_id=request.user.id %}">
+    View my public author profile
+</a>
+
+      <a href="{% url 'blog:post_edit' post.slug %}">Edit</a>
+    </article>
+  {% empty %}
+    <p>You haven't created any posts yet.</p>
+  {% endfor %}
+{% endblock %}
